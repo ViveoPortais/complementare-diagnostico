@@ -1,49 +1,41 @@
-'use client'
+'use client';
 
-import Button from '@/components/button/Button'
-import Input from '@/components/input/Input'
-import Loading from '@/components/loading/Loading'
-import Modal from '@/components/modals/Modal'
-import { useInativeTermsModal, useTermsModal } from '@/hooks/useModal'
-import {
-  getConsentTerms,
-  getDoctorByProgram,
-  termDoctor,
-} from '@/services/doctor'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState, useRef } from 'react'
-import { toast } from 'react-toastify'
+import React, { Suspense, useEffect, useState, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
+import Button from '@/components/button/Button';
+import Input from '@/components/input/Input';
+import Loading from '@/components/loading/Loading';
+import { toast } from 'react-toastify';
+import { getConsentTerms, getDoctorByProgram, termDoctor } from '@/services/doctor';
 
-const Terms = () => {
-  const searchParams = useSearchParams()
-  const UrlRouter = searchParams.get('id') as string | null
+const TermsContent = () => {
+  const searchParams = useSearchParams();
+  const UrlRouter = searchParams?.get('id') || null;
 
-  const [id, setId] = useState('')
-  const [doctorData, setDoctorData] = useState<any>({})
-  const [dataDoctor, setDataDoctor] = useState<any>(null)
+  const [id, setId] = useState('');
+  const [doctorData, setDoctorData] = useState<any>({});
+  const [dataDoctor, setDataDoctor] = useState<any>(null);
 
-  const [consentToReceivePhonecalls, setConsentToReceivePhonecalls] =
-    useState(false)
-  const [consentToReceiveSms, setConsentToReceiveSms] = useState(false)
-  const [confirmPersonalInformation, setConfirmPersonalInformation] =
-    useState(false)
-  const [consentLgpd, setConsentLgpd] = useState(false)
+  const [consentToReceivePhonecalls, setConsentToReceivePhonecalls] = useState(false);
+  const [consentToReceiveSms, setConsentToReceiveSms] = useState(false);
+  const [confirmPersonalInformation, setConfirmPersonalInformation] = useState(false);
+  const [consentLgpd, setConsentLgpd] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false) 
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const termRef = useRef<HTMLDivElement>(null)
+  const termRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (UrlRouter) setId(UrlRouter)
-  }, [UrlRouter])
+    if (UrlRouter) setId(UrlRouter);
+  }, [UrlRouter]);
 
   useEffect(() => {
-    if (!id) return
-    getDoctorByProgra()
-    getConsentTerm()
-  }, [id])
+    if (!id) return;
+    fetchDoctorData();
+    fetchConsentTerms();
+  }, [id]);
 
   useEffect(() => {
     if (doctorData && Object.keys(doctorData).length > 0) {
@@ -55,14 +47,12 @@ const Terms = () => {
         mobilePhone: doctorData.telephoneNumber,
         licenseNumber: doctorData.licenseNumber,
         licenseState: doctorData.licenseState,
-
         consentToReceivePhonecalls,
         consentToReceiveSms,
         confirmPersonalInformation,
         consentLgpd,
-
         programCode: '1100',
-      })
+      });
     }
   }, [
     doctorData,
@@ -71,87 +61,79 @@ const Terms = () => {
     consentToReceiveSms,
     confirmPersonalInformation,
     consentLgpd,
-  ])
+  ]);
+  
 
-  const getDoctorByProgra = async () => {
-    setIsLoading(true)
-    getDoctorByProgram({
-      doctorId: id,
-      programcode: '1100',
-    })
-      .then((response) => setDoctorData(response))
-      .finally(() => setIsLoading(false))
-  }
+  const fetchDoctorData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getDoctorByProgram({ doctorId: id, programcode: '1100' });
+      setDoctorData(response);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const getConsentTerm = async () => {
-    getConsentTerms({
-      doctorId: id,
-      programcode: '1100',
-    }).then((response) => {
-        
-        setConsentToReceivePhonecalls(response.consentToReceivePhonecalls || false)
-        setConsentToReceiveSms(response.consentToReceiveSms || false)
-        setConfirmPersonalInformation(response.confirmPersonalInformation || false)
-        setConsentLgpd(response.consentLgpd || false)
+  const fetchConsentTerms = async () => {
+    const response = await getConsentTerms({ doctorId: id, programcode: '1100' });
+    setConsentToReceivePhonecalls(response.consentToReceivePhonecalls || false);
+    setConsentToReceiveSms(response.consentToReceiveSms || false);
+    setConfirmPersonalInformation(response.confirmPersonalInformation || false);
+    setConsentLgpd(response.consentLgpd || false);
 
-      if (response.consentTerms && response.consentLgpd && response.confirmPersonalInformation) {
-        toast.info('Termo já foi aceito anteriormente.')
-        setIsSubmitted(true) 
-      }
-      if (response.doctorInactive) {
-        toast.error('Médico inativo no programa.')
-        setIsSubmitted(true) 
-      }
-    })
-  }
+    if (response.consentTerms && response.consentLgpd && response.confirmPersonalInformation) {
+      toast.info('Termo já foi aceito anteriormente.');
+      setIsSubmitted(true);
+    }
+    if (response.doctorInactive) {
+      toast.error('Médico inativo no programa.');
+      setIsSubmitted(true);
+    }
+  };
 
   const handleAccept = async () => {
-    setIsLoading(true)
-    termDoctor({
+    setIsLoading(true);
+    const response = await termDoctor({
       ...dataDoctor,
       consentTerms: true,
-    })
-      .then((response) => {
-        if (response.isValidData) {
-          toast.success('Termo aceito com sucesso.')
-          setIsSubmitted(true) 
-        } else {
-          toast.error(response.value)
-        }
-      })
-      .finally(() => setIsLoading(false))
-  }
+    });
+    response.isValidData
+      ? toast.success('Termo aceito com sucesso.')
+      : toast.error(response.value);
+    setIsSubmitted(true);
+    setIsLoading(false);
+  };
 
   const handleRefuse = async () => {
-    setIsLoading(true)
-    termDoctor({
+    setIsLoading(true);
+    setConsentToReceivePhonecalls(false);
+    setConsentToReceiveSms(false);
+    setConfirmPersonalInformation(false);
+    setConsentLgpd(false);
+    const response = await termDoctor({
       ...dataDoctor,
       consentTerms: false,
-    })
-      .then((response) => {
-        if (response.isValidData) {
-          toast.success('Termo recusado com sucesso.')
-          setIsSubmitted(true) 
-        } else {
-          toast.error(response.value)
-        }
-      })
-      .finally(() => setIsLoading(false))
-  }
+    });
+    response.isValidData
+      ? toast.success('Termo recusado com sucesso.')
+      : toast.error(response.value);
+    setIsSubmitted(true);
+    setIsLoading(false);
+  };
 
   const handleScroll = () => {
-    if (!termRef.current) return
-    const { scrollTop, scrollHeight, clientHeight } = termRef.current
+    if (!termRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = termRef.current;
     if (scrollHeight <= clientHeight || scrollTop + clientHeight >= scrollHeight) {
-      setIsScrolled(true)
+      setIsScrolled(true);
     }
-  }
+  };
 
   useEffect(() => {
-    if (!termRef.current) return
-    const { scrollHeight, clientHeight } = termRef.current
-    if (scrollHeight <= clientHeight) setIsScrolled(true)
-  }, [])
+    if (!termRef.current) return;
+    const { scrollHeight, clientHeight } = termRef.current;
+    if (scrollHeight <= clientHeight) setIsScrolled(true);
+  }, []);
 
   return (
     <div className="px-5 py-3 md:px-12 md:py-5">
@@ -215,10 +197,8 @@ const Terms = () => {
           </>
         )}
       </div>
-
       <div className="mt-5 bg-gray-50 border border-gray-200 rounded-lg p-5">
         <h2 className="text-lg font-bold mb-4">Consentimentos</h2>
-
         <div className="flex items-center gap-2 mb-4">
           <input
             id="chk-receive-calls"
@@ -226,7 +206,7 @@ const Terms = () => {
             className="h-5 w-5"
             checked={consentToReceivePhonecalls}
             onChange={(e) => setConsentToReceivePhonecalls(e.target.checked)}
-            disabled={isSubmitted} 
+            disabled={isSubmitted}
           />
           <label htmlFor="chk-receive-calls">Aceito receber ligações</label>
         </div>
@@ -237,7 +217,7 @@ const Terms = () => {
             className="h-5 w-5"
             checked={consentToReceiveSms}
             onChange={(e) => setConsentToReceiveSms(e.target.checked)}
-            disabled={isSubmitted} 
+            disabled={isSubmitted}
           />
           <label htmlFor="chk-receive-sms">Aceito receber SMS</label>
         </div>
@@ -248,11 +228,9 @@ const Terms = () => {
             className="h-5 w-5"
             checked={confirmPersonalInformation}
             onChange={(e) => setConfirmPersonalInformation(e.target.checked)}
-            disabled={isSubmitted} 
+            disabled={isSubmitted}
           />
-          <label htmlFor="chk-confirm-personal">
-            Confirmo meus dados pessoais
-          </label>
+          <label htmlFor="chk-confirm-personal">Confirmo meus dados pessoais</label>
         </div>
         <div className="flex items-center gap-2 mb-4">
           <input
@@ -261,12 +239,11 @@ const Terms = () => {
             className="h-5 w-5"
             checked={consentLgpd}
             onChange={(e) => setConsentLgpd(e.target.checked)}
-            disabled={isSubmitted} 
+            disabled={isSubmitted}
           />
           <label htmlFor="chk-lgpd">Aceito LGPD/privacidade de dados</label>
         </div>
       </div>
-
       <div
         ref={termRef}
         onScroll={handleScroll}
@@ -276,7 +253,6 @@ const Terms = () => {
           AVISO DE PRIVACIDADE E CONSENTIMENTO
         </div>
         <div className="text-justify text-xl md:text-2x1 leading-relaxed">
-        
         <p>Lorem ipsum dolor sit amet. Est nisi rerum eos placeat natus aut quia quas hic nemo quam est iure dolore sit culpa aliquam. 
             Ea harum quibusdam et officia voluptates ut alias ullam est asperiores ipsam id dolorem asperiores. 
             Sed ipsam quam et harum veritatis est sunt cumque non saepe distinctio. 
@@ -329,25 +305,32 @@ const Terms = () => {
         </p>
         </div>
       </div>
-
       <div className="flex flex-col md:flex-row gap-3 mt-8">
         <Button
           onClick={handleAccept}
           label="ACEITAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted} 
+          disabled={!isScrolled || isSubmitted}
           customClass="w-full bg-[#004aad] text-white"
         />
         <Button
           onClick={handleRefuse}
           label="RECUSAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted} 
+          disabled={!isScrolled || isSubmitted}
           customClass="w-full bg-gray-200 text-black"
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Terms
+const Terms = () => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <TermsContent />
+    </Suspense>
+  );
+};
+
+export default Terms;
