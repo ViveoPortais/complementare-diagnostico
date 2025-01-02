@@ -10,10 +10,10 @@ import {
   termPatient,
 } from "@/services/patient";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import {Suspense, useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 
-const TermsPatient = () => {
+const TermsPatientContent = () => {
   const searchParams = useSearchParams();
   const UrlRouter = searchParams.get("id") as string | null;
 
@@ -558,5 +558,14 @@ const TermsPatient = () => {
     </div>
   );
 };
+
+const TermsPatient = () => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <TermsPatientContent />
+    </Suspense>
+  );
+};
+
 
 export default TermsPatient;
