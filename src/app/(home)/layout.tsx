@@ -16,6 +16,7 @@ import { Documents } from "@/components/Documents";
 import { usePageHeight } from "@/hooks/usePageHeight";
 import { Header } from "@/components/dashboard/Header";
 import Terms from "./terms/page";
+import TermsPatient from "./termspatient/page";
 
 interface HomeLayoutProps {
   children: ReactNode;
@@ -33,24 +34,25 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
   }, [routes, role, router]);
 
   useEffect(() => {
-    if (
-      !isLogged &&
-      pathname !== "/terms" 
-
-    ) {
+    if (!isLogged && pathname !== "/terms" && pathname !== "/termspatient") {
       router.push("/terms");
     }
   }, [isLogged, router, pathname]);
-
 
   if (pathname === "/terms") {
     return <Terms />;
   }
 
- 
+  if (pathname === "/termspatient") {
+    return <TermsPatient />;
+  }
+
   return (
     <main className="h-screen w-screen overflow-x-hidden overflow-y-hidden">
-      <header id="desktop-header" className="hidden lg:flex h-28 w-full border-b border-zinc-200 items-center px-12">
+      <header
+        id="desktop-header"
+        className="hidden lg:flex h-28 w-full border-b border-zinc-200 items-center px-12"
+      >
         <Image
           src="/images/bms_logo_300.jpg"
           width={240}

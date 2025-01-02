@@ -42,20 +42,20 @@ export interface IDoctorData {
 }
 
 export interface IUpdateDoctorData {
-  doctorId: string | undefined
-  emailAddress: string | undefined
-  mobileNumber: string | undefined
-  medicalSpecialty: string | undefined
-  cpf: string | undefined
-  birthDate: string | undefined
-  AddressPostalCode: string | undefined
-  AddressName: string | undefined
-  AddressNumber: string | undefined
-  AddressComplement: string | undefined
-  AddressDistrict: string | undefined
-  AddressCity: string | undefined
-  AddressState: string | undefined
-  healthProgramCode: string | undefined
+  doctorId: string | undefined;
+  emailAddress: string | undefined;
+  mobileNumber: string | undefined;
+  medicalSpecialty: string | undefined;
+  cpf: string | undefined;
+  birthDate: string | undefined;
+  AddressPostalCode: string | undefined;
+  AddressName: string | undefined;
+  AddressNumber: string | undefined;
+  AddressComplement: string | undefined;
+  AddressDistrict: string | undefined;
+  AddressCity: string | undefined;
+  AddressState: string | undefined;
+  healthProgramCode: string | undefined;
 }
 
 export interface IInactiveDoctor {
@@ -65,10 +65,14 @@ export interface IInactiveDoctor {
 }
 
 export interface IDoctorByProgram {
-  doctorId: string
-  programcode: string
+  doctorId: string;
+  programcode: string;
 }
 
+export interface IPatientByProgram {
+  patientId: string;
+  programcode: string;
+}
 
 export interface DiagnosticData {
   typePatient: string;
