@@ -53,30 +53,30 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
         id="desktop-header"
         className="hidden lg:flex h-28 w-full border-b border-zinc-200 items-center px-12"
       >
-        <Image
+        {/* <Image
           src="/images/bms_logo_300.jpg"
           width={240}
           height={80}
           alt="logoConecta"
-        />
+        /> */}
       </header>
-      <div className="w-full h-full md:h-screen flex justify-center backgroundHome items-center">
+      <div className="w-full h-full md:h-screen flex justify-center items-center">
         <div className="flex items-center justify-center xl:col-span-2 mb-10">
           <ScrollArea className="bg-white flex flex-col items-center justify-center p-4 md:p-8 mx-4 max-h-[90vh] md:max-h-[85vh]">
             <div className="w-full flex items-center justify-center">
-              <Image
+              {/* <Image
                 src="/images/logo-purple.png"
                 width={240}
                 height={80}
                 alt="logoConecta"
                 className="mb-7"
-              />
+              /> */}
             </div>
             {children}
           </ScrollArea>
         </div>
       </div>
-      <Footer isTall={verifyHeight} />
+      {/* <Footer isTall={verifyHeight} /> */}
     </main>
   );
 }

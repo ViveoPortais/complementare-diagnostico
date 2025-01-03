@@ -19,6 +19,7 @@ const TermsContent = () => {
   const [consentToReceivePhonecalls, setConsentToReceivePhonecalls] = useState(false);
   const [consentToReceiveSms, setConsentToReceiveSms] = useState(false);
   const [confirmPersonalInformation, setConfirmPersonalInformation] = useState(false);
+  const [confirmEmail, setConfirmEmail] = useState(false);
   const [consentLgpd, setConsentLgpd] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +52,7 @@ const TermsContent = () => {
         consentToReceiveSms,
         confirmPersonalInformation,
         consentLgpd,
+        consentToReceiveEmail: confirmEmail,
         programCode: '1100',
       });
     }
@@ -80,6 +82,7 @@ const TermsContent = () => {
     setConsentToReceiveSms(response.consentToReceiveSms || false);
     setConfirmPersonalInformation(response.confirmPersonalInformation || false);
     setConsentLgpd(response.consentLgpd || false);
+    setConfirmEmail(response.consentToReceiveEmail || false);
 
     if (response.consentTerms && response.consentLgpd && response.confirmPersonalInformation) {
       toast.info('Termo já foi aceito anteriormente.');
@@ -124,7 +127,10 @@ const TermsContent = () => {
   const handleScroll = () => {
     if (!termRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = termRef.current;
-    if (scrollHeight <= clientHeight || scrollTop + clientHeight >= scrollHeight) {
+
+    const tolerance = 50; 
+  
+    if (scrollTop + clientHeight + tolerance >= scrollHeight) {
       setIsScrolled(true);
     }
   };
@@ -220,6 +226,17 @@ const TermsContent = () => {
             disabled={isSubmitted}
           />
           <label htmlFor="chk-receive-sms">Aceito receber SMS</label>
+        </div> 
+        <div className="flex items-center gap-2 mb-4">
+          <input
+            id="chk-confirm-email"
+            type="checkbox"
+            className="h-5 w-5"
+            checked={confirmEmail}
+            onChange={(e) => setConfirmEmail(e.target.checked)}
+            disabled={isSubmitted}
+          />
+          <label htmlFor="chk-confirm-email">Aceito receber E-mails</label>
         </div>
         <div className="flex items-center gap-2 mb-4">
           <input
@@ -230,7 +247,7 @@ const TermsContent = () => {
             onChange={(e) => setConfirmPersonalInformation(e.target.checked)}
             disabled={isSubmitted}
           />
-          <label htmlFor="chk-confirm-personal">Confirmo meus dados pessoais</label>
+          <label htmlFor="chk-confirm-personal">Confirmo meus dados pessoais - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
         </div>
         <div className="flex items-center gap-2 mb-4">
           <input
@@ -241,7 +258,7 @@ const TermsContent = () => {
             onChange={(e) => setConsentLgpd(e.target.checked)}
             disabled={isSubmitted}
           />
-          <label htmlFor="chk-lgpd">Aceito LGPD/privacidade de dados</label>
+          <label htmlFor="chk-lgpd">Aceito LGPD/privacidade de dados - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
         </div>
       </div>
       <div
@@ -310,7 +327,7 @@ const TermsContent = () => {
           onClick={handleAccept}
           label="ACEITAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted}
+          disabled={!isScrolled || isSubmitted || !consentLgpd || !consentLgpd}
           customClass="w-full bg-[#004aad] text-white"
         />
         <Button

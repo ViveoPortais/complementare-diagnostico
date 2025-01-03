@@ -140,14 +140,14 @@ const TermsPatientContent = () => {
   const handleScroll = () => {
     if (!termRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = termRef.current;
-    if (
-      scrollHeight <= clientHeight ||
-      scrollTop + clientHeight >= scrollHeight
-    ) {
+
+    const tolerance = 50; 
+  
+    if (scrollTop + clientHeight + tolerance >= scrollHeight) {
       setIsScrolled(true);
     }
   };
-
+  
   useEffect(() => {
     if (!termRef.current) return;
     const { scrollHeight, clientHeight } = termRef.current;
@@ -247,7 +247,7 @@ const TermsPatientContent = () => {
             disabled={isSubmitted}
           />
           <label htmlFor="chk-confirm-personal">
-            Confirmo meus dados pessoais
+            Confirmo meus dados pessoais - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span>
           </label>
         </div>
         <div className="flex items-center gap-2 mb-4">
@@ -259,7 +259,7 @@ const TermsPatientContent = () => {
             onChange={(e) => setConsentLgpd(e.target.checked)}
             disabled={isSubmitted}
           />
-          <label htmlFor="chk-lgpd">Aceito LGPD/privacidade de dados</label>
+          <label htmlFor="chk-lgpd">Aceito LGPD/privacidade de dados - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
         </div>
       </div>
 
