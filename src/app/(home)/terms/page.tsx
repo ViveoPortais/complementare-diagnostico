@@ -95,7 +95,7 @@ const TermsContent = () => {
       toast.info('Termo já foi aceito anteriormente.');
       setIsSubmitted(true);
     }
-    if (!response.consentTerms && !response.consentLgpd) {
+    if (response.consentTerms == false && response.consentLgpd == false) {
       toast.info("Termo já foi recusado anteriormente.");
       setIsSubmitted(true);
     }
@@ -361,7 +361,7 @@ const TermsContent = () => {
           label="RECUSAR"
           isLoading={isLoading}
           disabled={!isScrolled || isSubmitted}
-          customClass="w-full bg-gray-200 text-black"
+          customClass="w-full bg-main-black text-black"
         />
       </div>
     </div>
