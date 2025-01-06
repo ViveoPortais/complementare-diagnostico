@@ -91,8 +91,12 @@ const TermsContent = () => {
     setConsentLgpd(response.consentLgpd || false);
     setConfirmEmail(response.consentToReceiveEmail || false);
 
-    if (response.consentTerms && response.consentLgpd && response.confirmPersonalInformation) {
+    if (response.consentTerms && response.consentLgpd) {
       toast.info('Termo já foi aceito anteriormente.');
+      setIsSubmitted(true);
+    }
+    if (!response.consentTerms && !response.consentLgpd) {
+      toast.info("Termo já foi recusado anteriormente.");
       setIsSubmitted(true);
     }
     if (response.doctorInactive) {

@@ -102,6 +102,9 @@ const TermsPatientContent = () => {
       if (response.consentTerms && response.consentLgpd) {
         toast.info("Termo já foi aceito anteriormente.");
         setIsSubmitted(true);
+      }if (!response.consentTerms && !response.consentLgpd) {
+        toast.info("Termo já foi recusado anteriormente.");
+        setIsSubmitted(true);
       }
       if (response.patientInactive) {
         toast.error("Paciente inativo no programa.");
