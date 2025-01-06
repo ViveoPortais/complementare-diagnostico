@@ -268,7 +268,7 @@ const TermsPatientContent = () => {
             disabled={isSubmitted}
           />
           <label htmlFor="chk-confirm-personal">
-            Confirmo meus dados pessoais - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span>
+            Confirmo meus dados pessoais
           </label>
         </div>
         <div className="flex items-center gap-2 mb-4">
