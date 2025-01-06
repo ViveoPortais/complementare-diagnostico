@@ -17,6 +17,8 @@ const TermsContent = () => {
   const [dataDoctor, setDataDoctor] = useState<any>(null);
 
   const [consentToReceivePhonecalls, setConsentToReceivePhonecalls] = useState(false);
+  const [consentProgramParticipation, setConsentProgramParticipation] =
+    useState(false);
   const [consentToReceiveSms, setConsentToReceiveSms] = useState(false);
   const [confirmPersonalInformation, setConfirmPersonalInformation] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState(false);
@@ -48,6 +50,7 @@ const TermsContent = () => {
         mobilePhone: doctorData.telephoneNumber,
         licenseNumber: doctorData.licenseNumber,
         licenseState: doctorData.licenseState,
+        consentProgramParticipation,
         consentToReceivePhonecalls,
         consentToReceiveSms,
         confirmPersonalInformation,
@@ -59,6 +62,7 @@ const TermsContent = () => {
   }, [
     doctorData,
     id,
+    consentProgramParticipation,
     consentToReceivePhonecalls,
     consentToReceiveSms,
     confirmPersonalInformation,
@@ -79,6 +83,9 @@ const TermsContent = () => {
   const fetchConsentTerms = async () => {
     const response = await getConsentTerms({ doctorId: id, programcode: '1100' });
     setConsentToReceivePhonecalls(response.consentToReceivePhonecalls || false);
+    setConsentProgramParticipation(
+      response.consentProgramParticipation || false
+    );
     setConsentToReceiveSms(response.consentToReceiveSms || false);
     setConfirmPersonalInformation(response.confirmPersonalInformation || false);
     setConsentLgpd(response.consentLgpd || false);
@@ -95,6 +102,10 @@ const TermsContent = () => {
   };
 
   const handleAccept = async () => {
+    if (!consentToReceivePhonecalls && !consentToReceiveSms && !confirmEmail) {
+      toast.error("Você precisa selecionar pelo menos uma via de contato.");
+      return;
+    }  
     setIsLoading(true);
     const response = await termDoctor({
       ...dataDoctor,
@@ -210,6 +221,17 @@ const TermsContent = () => {
             id="chk-receive-calls"
             type="checkbox"
             className="h-5 w-5"
+            checked={consentProgramParticipation}
+            onChange={(e) => setConsentProgramParticipation(e.target.checked)}
+            disabled={isSubmitted}
+          />
+          <label htmlFor="chk-receive-calls">Aceita participar do programa de diagnóstico</label>
+        </div>
+        <div className="flex items-center gap-2 mb-4">
+          <input
+            id="chk-receive-calls"
+            type="checkbox"
+            className="h-5 w-5"
             checked={consentToReceivePhonecalls}
             onChange={(e) => setConsentToReceivePhonecalls(e.target.checked)}
             disabled={isSubmitted}
@@ -247,7 +269,7 @@ const TermsContent = () => {
             onChange={(e) => setConfirmPersonalInformation(e.target.checked)}
             disabled={isSubmitted}
           />
-          <label htmlFor="chk-confirm-personal">Confirmo meus dados pessoais - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
+          <label htmlFor="chk-confirm-personal">Confirmo meus dados pessoais</label>
         </div>
         <div className="flex items-center gap-2 mb-4">
           <input
@@ -327,7 +349,7 @@ const TermsContent = () => {
           onClick={handleAccept}
           label="ACEITAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted || !consentLgpd || !consentLgpd}
+          disabled={!isScrolled || isSubmitted || !consentLgpd}
           customClass="w-full bg-[#004aad] text-white"
         />
         <Button
