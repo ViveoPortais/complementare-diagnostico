@@ -53,6 +53,7 @@ const TermsPatientContent = () => {
         patientId: id,
         consentTerms: true,
         consentProgramParticipation: consentProgramParticipation,
+        confirmPersonalInformation: confirmPersonalInformation,
         consentToReceivePhonecalls: consentToReceivePhonecalls,
         consentToReceiveSms: consentToReceiveSms,
         consentLgpd: consentLgpd,
@@ -133,7 +134,7 @@ const TermsPatientContent = () => {
 
   const handleRefuse = async () => {
     setIsLoading(true);
-    termDoctor({
+    termPatient({
       ...dataDoctor,
       consentTerms: false,
     })
