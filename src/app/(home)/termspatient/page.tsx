@@ -576,7 +576,7 @@ const TermsPatientContent = () => {
           onClick={handleRefuse}
           label="RECUSAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted}
+          disabled={!isScrolled || isSubmitted || consentLgpd}
           customClass="w-full bg-main-black text-black"
         />
       </div>
