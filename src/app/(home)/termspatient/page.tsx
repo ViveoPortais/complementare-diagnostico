@@ -227,7 +227,7 @@ const TermsPatientContent = () => {
             onChange={(e) => setConsentProgramParticipation(e.target.checked)}
             disabled={isSubmitted}
           />
-          <label htmlFor="chk-receive-calls">Aceita participar do programa de diagnóstico</label>
+          <label htmlFor="chk-receive-calls">Aceita participar do programa de diagnóstico - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
         </div>
         <div className="flex items-center gap-2 mb-4">
           <input
@@ -272,7 +272,7 @@ const TermsPatientContent = () => {
             disabled={isSubmitted}
           />
           <label htmlFor="chk-confirm-personal">
-            Confirmo meus dados pessoais
+            Confirmo meus dados pessoais - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span>
           </label>
         </div>
         <div className="flex items-center gap-2 mb-4">
@@ -569,14 +569,14 @@ const TermsPatientContent = () => {
           onClick={handleAccept}
           label="ACEITAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted || !consentLgpd}
+          disabled={!isScrolled || isSubmitted || !consentLgpd || !confirmPersonalInformation || !consentProgramParticipation}
           customClass="w-full bg-main-purple text-white"
         />
         <Button
           onClick={handleRefuse}
           label="RECUSAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted || consentLgpd}
+          disabled={!isScrolled || isSubmitted || consentLgpd || confirmPersonalInformation || consentProgramParticipation}
           customClass="w-full bg-main-black text-black"
         />
       </div>
