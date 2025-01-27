@@ -105,11 +105,7 @@ const TermsContent = () => {
     }
   };
 
-  const handleAccept = async () => {
-    if (!consentToReceivePhonecalls && !consentToReceiveSms && !confirmEmail) {
-      toast.error("Você precisa selecionar pelo menos uma via de contato.");
-      return;
-    }  
+  const handleAccept = async () => {  
     setIsLoading(true);
     const response = await termDoctor({
       ...dataDoctor,
@@ -240,7 +236,7 @@ const TermsContent = () => {
             onChange={(e) => setConsentToReceivePhonecalls(e.target.checked)}
             disabled={isSubmitted}
           />
-          <label htmlFor="chk-receive-calls">Aceito receber ligações</label>
+          <label htmlFor="chk-receive-calls">Aceito receber ligações - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
         </div>
         <div className="flex items-center gap-2 mb-4">
           <input
@@ -251,7 +247,7 @@ const TermsContent = () => {
             onChange={(e) => setConsentToReceiveSms(e.target.checked)}
             disabled={isSubmitted}
           />
-          <label htmlFor="chk-receive-sms">Aceito receber SMS</label>
+          <label htmlFor="chk-receive-sms">Aceito receber SMS - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
         </div> 
         <div className="flex items-center gap-2 mb-4">
           <input
@@ -262,7 +258,7 @@ const TermsContent = () => {
             onChange={(e) => setConfirmEmail(e.target.checked)}
             disabled={isSubmitted}
           />
-          <label htmlFor="chk-confirm-email">Aceito receber E-mails</label>
+          <label htmlFor="chk-confirm-email">Aceito receber E-mails - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
         </div>
         <div className="flex items-center gap-2 mb-4">
           <input
@@ -353,14 +349,14 @@ const TermsContent = () => {
           onClick={handleAccept}
           label="ACEITAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted || !consentLgpd || !confirmPersonalInformation || !consentProgramParticipation}
+          disabled={!isScrolled || isSubmitted || !consentLgpd || !confirmPersonalInformation || !consentProgramParticipation || !consentToReceivePhonecalls || !consentToReceiveSms || !confirmEmail}
           customClass="w-full bg-[#004aad] text-white"
         />
         <Button
           onClick={handleRefuse}
           label="RECUSAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted || consentLgpd || confirmPersonalInformation || consentProgramParticipation}
+          disabled={!isScrolled || isSubmitted || consentLgpd || confirmPersonalInformation || consentProgramParticipation || consentToReceivePhonecalls || consentToReceiveSms || confirmEmail}
           customClass="w-full bg-main-black text-black"
         />
       </div>
