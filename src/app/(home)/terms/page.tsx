@@ -69,6 +69,21 @@ const TermsContent = () => {
     consentLgpd,
   ]);
   
+  useEffect(() => {
+    if (consentProgramParticipation) {
+      setConsentToReceivePhonecalls(true);
+      setConsentToReceiveSms(true);
+      setConfirmEmail(true);
+      setConfirmPersonalInformation(true);
+      setConsentLgpd(true);
+    }else{
+      setConsentToReceivePhonecalls(false);
+      setConsentToReceiveSms(false);
+      setConfirmEmail(false);
+      setConfirmPersonalInformation(false);
+      setConsentLgpd(false);
+    }
+  }, [consentProgramParticipation]);
 
   const fetchDoctorData = async () => {
     setIsLoading(true);
@@ -282,6 +297,7 @@ const TermsContent = () => {
           />
           <label htmlFor="chk-lgpd">Aceito LGPD/privacidade de dados - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
         </div>
+        <strong>Para aceitar o termo de consentimento do programa, é necessário rolar a página até o final. Isso ativará as opções de aceite ou recusa.</strong>
       </div>
       <div
         ref={termRef}

@@ -72,6 +72,22 @@ const TermsPatientContent = () => {
     confirmEmail,
   ]);
 
+  useEffect(() => {
+    if (consentProgramParticipation) {
+      setConsentToReceivePhonecalls(true);
+      setConsentToReceiveSms(true);
+      setConfirmEmail(true);
+      setConfirmPersonalInformation(true);
+      setConsentLgpd(true);
+    }else{
+      setConsentToReceivePhonecalls(false);
+      setConsentToReceiveSms(false);
+      setConfirmEmail(false);
+      setConfirmPersonalInformation(false);
+      setConsentLgpd(false);
+    }
+  }, [consentProgramParticipation]);
+
   const getDoctorByProgra = async () => {
     setIsLoading(true);
     getPatientByProgram({
@@ -281,7 +297,8 @@ const TermsPatientContent = () => {
             disabled={isSubmitted}
           />
           <label htmlFor="chk-lgpd">Aceito LGPD/privacidade de dados - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
-        </div>
+        </div>        
+        <strong>Para aceitar o termo de consentimento do programa, é necessário rolar a página até o final. Isso ativará as opções de aceite ou recusa.</strong>
       </div>
 
       <div
