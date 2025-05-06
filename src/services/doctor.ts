@@ -141,7 +141,6 @@ export const getDoctorByProgram = async (data: IDoctorByProgram) => {
 }
 
 export const termDoctor = async (data: any) => {
-  debugger;
   const response = await api.post('/Doctor/termdoctor', data)
 
   return response.data

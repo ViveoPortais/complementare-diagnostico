@@ -240,64 +240,11 @@ const TermsContent = () => {
             onChange={(e) => setConsentProgramParticipation(e.target.checked)}
             disabled={isSubmitted}
           />
-          <label htmlFor="chk-receive-calls">Aceita participar do programa de diagnóstico - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
+          <label htmlFor="chk-receive-calls">Aceito participar do Programa Complementare e concordo com o regulamento do Programa.- <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
         </div>
-        <div className="flex items-center gap-2 mb-4">
-          <input
-            id="chk-receive-calls"
-            type="checkbox"
-            className="h-5 w-5"
-            checked={consentToReceivePhonecalls}
-            onChange={(e) => setConsentToReceivePhonecalls(e.target.checked)}
-            disabled={isSubmitted}
-          />
-          <label htmlFor="chk-receive-calls">Aceito receber ligações - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
+        <div className="mt-5 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 text-base font-semibold rounded">
+          Para aceitar o regulamento do Programa, é <u>obrigatório rolar a página até o final</u>. Isso ativará as opções de <strong>ACEITAR</strong> ou <strong>RECUSAR</strong>.
         </div>
-        <div className="flex items-center gap-2 mb-4">
-          <input
-            id="chk-receive-sms"
-            type="checkbox"
-            className="h-5 w-5"
-            checked={consentToReceiveSms}
-            onChange={(e) => setConsentToReceiveSms(e.target.checked)}
-            disabled={isSubmitted}
-          />
-          <label htmlFor="chk-receive-sms">Aceito receber SMS - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
-        </div>
-        <div className="flex items-center gap-2 mb-4">
-          <input
-            id="chk-confirm-email"
-            type="checkbox"
-            className="h-5 w-5"
-            checked={confirmEmail}
-            onChange={(e) => setConfirmEmail(e.target.checked)}
-            disabled={isSubmitted}
-          />
-          <label htmlFor="chk-confirm-email">Aceito receber E-mails - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
-        </div>
-        <div className="flex items-center gap-2 mb-4">
-          <input
-            id="chk-confirm-personal"
-            type="checkbox"
-            className="h-5 w-5"
-            checked={confirmPersonalInformation}
-            onChange={(e) => setConfirmPersonalInformation(e.target.checked)}
-            disabled={isSubmitted}
-          />
-          <label htmlFor="chk-confirm-personal">Confirmo meus dados pessoais - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
-        </div>
-        <div className="flex items-center gap-2 mb-4">
-          <input
-            id="chk-lgpd"
-            type="checkbox"
-            className="h-5 w-5"
-            checked={consentLgpd}
-            onChange={(e) => setConsentLgpd(e.target.checked)}
-            disabled={isSubmitted}
-          />
-          <label htmlFor="chk-lgpd">Aceito LGPD/privacidade de dados - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
-        </div>
-        <strong>Para aceitar o termo de consentimento do programa, é necessário rolar a página até o final. Isso ativará as opções de aceite ou recusa.</strong>
       </div>
       <div
         ref={termRef}
@@ -305,7 +252,7 @@ const TermsContent = () => {
         className="mt-5 border border-gray-200 rounded-lg p-5 h-[50vh] overflow-y-auto text-lg leading-relaxed"
       >
         <div className="text-center text-xl md:text-2xl font-bold text-blue mt-2 mb-4">
-          AVISO DE PRIVACIDADE E CONSENTIMENTO
+          REGULAMENTO
         </div>
         <div className="text-start text-xl md:text-2xl font-bold text-blue mt-2 mb-4">
           1. O que é o Programa Complementare?

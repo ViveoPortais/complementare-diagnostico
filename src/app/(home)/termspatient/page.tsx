@@ -21,15 +21,11 @@ const TermsPatientContent = () => {
   const [doctorData, setDoctorData] = useState<any>({});
   const [dataDoctor, setDataDoctor] = useState<any>(null);
 
-  const [consentToReceivePhonecalls, setConsentToReceivePhonecalls] =
-    useState(false);
+
   const [consentProgramParticipation, setConsentProgramParticipation] =
     useState(false);
-  const [consentToReceiveSms, setConsentToReceiveSms] = useState(false);
-  const [confirmPersonalInformation, setConfirmPersonalInformation] =
-    useState(false);
+
   const [confirmEmail, setConfirmEmail] = useState(false);
-  const [consentLgpd, setConsentLgpd] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -53,10 +49,6 @@ const TermsPatientContent = () => {
         patientId: id,
         consentTerms: true,
         consentProgramParticipation: consentProgramParticipation,
-        confirmPersonalInformation: confirmPersonalInformation,
-        consentToReceivePhonecalls: consentToReceivePhonecalls,
-        consentToReceiveSms: consentToReceiveSms,
-        consentLgpd: consentLgpd,
         consentToReceiveEmail: confirmEmail,
         patientInactive: false,
         programCode: "1100",
@@ -66,25 +58,14 @@ const TermsPatientContent = () => {
     doctorData,
     id,
     consentProgramParticipation,
-    consentToReceivePhonecalls,
-    consentToReceiveSms,
-    consentLgpd,
     confirmEmail,
   ]);
 
   useEffect(() => {
     if (consentProgramParticipation) {
-      setConsentToReceivePhonecalls(true);
-      setConsentToReceiveSms(true);
       setConfirmEmail(true);
-      setConfirmPersonalInformation(true);
-      setConsentLgpd(true);
     } else {
-      setConsentToReceivePhonecalls(false);
-      setConsentToReceiveSms(false);
       setConfirmEmail(false);
-      setConfirmPersonalInformation(false);
-      setConsentLgpd(false);
     }
   }, [consentProgramParticipation]);
 
@@ -103,15 +84,9 @@ const TermsPatientContent = () => {
       patientId: id,
       programcode: "1100",
     }).then((response) => {
-      setConsentToReceivePhonecalls(
-        response.consentToReceivePhonecalls || false
-      );
       setConsentProgramParticipation(
         response.consentProgramParticipation || false
       );
-      setConsentToReceiveSms(response.consentToReceiveSms || false);
-      setConfirmPersonalInformation(response.consentTerms || false);
-      setConsentLgpd(response.consentLgpd || false);
 
       setConfirmEmail(response.consentToReceiveEmail || false);
 
@@ -134,7 +109,6 @@ const TermsPatientContent = () => {
     termPatient({
       ...dataDoctor,
       consentTerms: true,
-      consentLgpd: consentLgpd,
     })
       .then((response) => {
         if (response.isValidData) {
@@ -239,66 +213,16 @@ const TermsPatientContent = () => {
             onChange={(e) => setConsentProgramParticipation(e.target.checked)}
             disabled={isSubmitted}
           />
-          <label htmlFor="chk-receive-calls">Aceita participar do programa de diagnóstico - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
+          <label htmlFor="chk-receive-calls">Aceito participar do Programa Complementare e concordo com o regulamento do Programa.- <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
         </div>
-        <div className="flex items-center gap-2 mb-4">
-          <input
-            id="chk-receive-calls"
-            type="checkbox"
-            className="h-5 w-5"
-            checked={consentToReceivePhonecalls}
-            onChange={(e) => setConsentToReceivePhonecalls(e.target.checked)}
-            disabled={isSubmitted}
-          />
-          <label htmlFor="chk-receive-calls">Aceito receber ligações - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
+       
+       
+        
+       
+       
+        <div className="mt-5 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 text-base font-semibold rounded">
+          Para aceitar o regulamento do Programa, é <u>obrigatório rolar a página até o final</u>. Isso ativará as opções de <strong>ACEITAR</strong> ou <strong>RECUSAR</strong>.
         </div>
-        <div className="flex items-center gap-2 mb-4">
-          <input
-            id="chk-receive-sms"
-            type="checkbox"
-            className="h-5 w-5"
-            checked={consentToReceiveSms}
-            onChange={(e) => setConsentToReceiveSms(e.target.checked)}
-            disabled={isSubmitted}
-          />
-          <label htmlFor="chk-receive-sms">Aceito receber SMS - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
-        </div>
-        <div className="flex items-center gap-2 mb-4">
-          <input
-            id="chk-confirm-email"
-            type="checkbox"
-            className="h-5 w-5"
-            checked={confirmEmail}
-            onChange={(e) => setConfirmEmail(e.target.checked)}
-            disabled={isSubmitted}
-          />
-          <label htmlFor="chk-confirm-email">Aceito receber E-mails - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
-        </div>
-        <div className="flex items-center gap-2 mb-4">
-          <input
-            id="chk-confirm-personal"
-            type="checkbox"
-            className="h-5 w-5"
-            checked={confirmPersonalInformation}
-            onChange={(e) => setConfirmPersonalInformation(e.target.checked)}
-            disabled={isSubmitted}
-          />
-          <label htmlFor="chk-confirm-personal">
-            Confirmo meus dados pessoais - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span>
-          </label>
-        </div>
-        <div className="flex items-center gap-2 mb-4">
-          <input
-            id="chk-lgpd"
-            type="checkbox"
-            className="h-5 w-5"
-            checked={consentLgpd}
-            onChange={(e) => setConsentLgpd(e.target.checked)}
-            disabled={isSubmitted}
-          />
-          <label htmlFor="chk-lgpd">Aceito LGPD/privacidade de dados - <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
-        </div>
-        <strong>Para aceitar o termo de consentimento do programa, é necessário rolar a página até o final. Isso ativará as opções de aceite ou recusa.</strong>
       </div>
 
       <div
@@ -307,7 +231,7 @@ const TermsPatientContent = () => {
         className="mt-5 border border-gray-200 rounded-lg p-5 h-[50vh] overflow-y-auto text-lg leading-relaxed"
       >
         <div className="text-center text-3xl text-enzimaisBlue font-bold mt-5 mb-10">
-            <span>AVISO DE PRIVACIDADE E CONSENTIMENTO</span>
+            <span>REGULAMENTO</span>
           </div>
         <div className="text-start text-xl md:text-2xl font-bold text-blue mt-2 mb-4">
           1. O que é o Programa Complementare?
@@ -547,14 +471,14 @@ const TermsPatientContent = () => {
           onClick={handleAccept}
           label="ACEITAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted || !consentLgpd || !confirmPersonalInformation || !consentProgramParticipation || !consentToReceivePhonecalls || !consentToReceiveSms || !confirmEmail}
-          customClass="w-full bg-main-purple text-white"
+          disabled={!isScrolled || isSubmitted ||  !consentProgramParticipation  || !confirmEmail}
+          customClass="w-full bg-[#004aad] text-white"
         />
         <Button
           onClick={handleRefuse}
           label="RECUSAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted || consentLgpd || confirmPersonalInformation || consentProgramParticipation || consentToReceivePhonecalls || consentToReceiveSms || confirmEmail}
+          disabled={!isScrolled || isSubmitted || consentProgramParticipation || confirmEmail}
           customClass="w-full bg-main-black text-black"
         />
       </div>

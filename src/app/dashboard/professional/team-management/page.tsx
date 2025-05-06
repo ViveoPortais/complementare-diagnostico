@@ -64,7 +64,7 @@ export default function TeamManagement() {
 
         try {
             const response = await getDoctorCRMUFByProgram(licenseNumber, licenseState);
-            debugger
+            
             if (response.isValidData) {
                 toast.success(response.additionalMessage);
                 setValue("professionalName", response.value[0].name);

@@ -98,7 +98,6 @@ const RequestExamPage: React.FC = () => {
       setIsLoading(true);
       await getListOptions()
         .then((res) => {
-          debugger
           if (res.isValidData) {
             if (isDoctor) {
               let doctor = res.value.doctors[0]

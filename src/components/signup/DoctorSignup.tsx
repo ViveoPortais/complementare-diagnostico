@@ -187,7 +187,6 @@ export function DoctorSignUp() {
 
     setAddDoctorLoading(true);
 
-    debugger
 
     try {
       const res = await handleRegistration(data, selectedValues);
