@@ -243,7 +243,7 @@ const TermsContent = () => {
           <label htmlFor="chk-receive-calls">Aceito participar do Programa Complementare e concordo com o regulamento do Programa.- <span className='text-red-500 text-sm'>É necessario aceitar para continuar.</span></label>
         </div>
         <div className="mt-5 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 text-base font-semibold rounded">
-          Para aceitar o regulamento do Programa, é <u>obrigatório rolar a página até o final</u>. Isso ativará as opções de <strong>ACEITAR</strong> ou <strong>RECUSAR</strong>.
+          Para aceitar o regulamento do Programa, é <u>necessário ler a página até o final</u>. Isso ativará as opções de <strong>ACEITAR</strong> ou <strong>RECUSAR</strong>.
         </div>
       </div>
       <div
