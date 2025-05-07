@@ -221,7 +221,8 @@ const TermsPatientContent = () => {
        
        
         <div className="mt-5 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 text-base font-semibold rounded">
-          Para aceitar o regulamento do Programa, é <u>necessário ler a página até o final</u>. Isso ativará as opções de <strong>ACEITAR</strong> ou <strong>RECUSAR</strong>.
+        Para aceitar o regulamento do Programa, é <u>necessário ler a página até o final</u>. Isso ativará as opções de <strong>aceite</strong> ou <strong>recusa</strong>.
+
         </div>
       </div>
 
