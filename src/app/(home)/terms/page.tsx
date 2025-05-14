@@ -417,12 +417,12 @@ const TermsContent = () => {
           excluídos.
 
         </p>
-        <p>• Em caso de relato de um evento adverso relacionado a qualquer medicamento da <strong>AstraZeneca </strong>,
+        <p>• Em caso de relato de um evento adverso relacionado a qualquer medicamento da <strong> AstraZeneca </strong>,
           profissionais de farmacovigilância da empresa poderão entrar em contato com o paciente participante ou com o
           médico prescritor para obter informações complementares.
         </p>
         <p>• Informações geradas pelo relato de um evento adverso de qualquer medicamento da
-          <strong>AstraZeneca </strong> serão, nos termos da lei, coletadas, armazenadas e processadas pela <strong>AstraZeneca </strong> para
+          <strong> AstraZeneca </strong> serão, nos termos da lei, coletadas, armazenadas e processadas pela <strong>AstraZeneca </strong> para
           monitoramento da segurança dos seus medicamentos e, quando for preciso, essas informações serão
           enviadas à Autoridade Sanitária local ou global.
         </p>

@@ -395,7 +395,7 @@ const TermsPatientContent = () => {
           </p>
           <p>
             • Ao aderir ao Programa, os participantes estão cientes de que seus dados pessoais coletados pela
-            <strong>AstraZeneca </strong> poderão sertransferidos para outras empresas do grupo <strong>AstraZeneca </strong> , no Brasil e no exterior, e para
+            <strong> AstraZeneca </strong> poderão sertransferidos para outras empresas do grupo <strong>AstraZeneca </strong> , no Brasil e no exterior, e para
             determinados terceiros que auxiliam a <strong>AstraZeneca </strong>  a implementar, desempenhar, operacionalizar, fornecer e a
             aprimorar o Programa, tais como: administradores da plataforma do Programa, empresa de cloud-computing,
             prestadores de serviços de TI e demais fornecedores e prestadores de serviço da <strong>AstraZeneca </strong> . A <strong>AstraZeneca </strong> 
@@ -424,13 +424,13 @@ const TermsPatientContent = () => {
             excluídos.
           </p>
           <p>
-            • Em caso de relato de um evento adverso relacionado a qualquer medicamento da <strong>AstraZeneca</strong>,
+            • Em caso de relato de um evento adverso relacionado a qualquer medicamento da <strong> AstraZeneca</strong>,
             profissionais de farmacovigilância da empresa poderão entrar em contato com o paciente participante ou com o
             médico prescritor para obter informações complementares.
           </p>
           <p>
             • Informações geradas pelo relato de um evento adverso de qualquer medicamento da
-            <strong>AstraZeneca </strong> serão, nos termos da lei, coletadas, armazenadas e processadas pela <strong>AstraZeneca </strong> para
+            <strong> AstraZeneca </strong> serão, nos termos da lei, coletadas, armazenadas e processadas pela <strong> AstraZeneca </strong> para
             monitoramento da segurança dos seus medicamentos e, quando for preciso, essas informações serão
             enviadas à Autoridade Sanitária local ou global.
           </p>
