@@ -395,7 +395,7 @@ const TermsPatientContent = () => {
           </p>
           <p>
             • Ao aderir ao Programa, os participantes estão cientes de que seus dados pessoais coletados pela
-            <strong> AstraZeneca </strong> poderão sertransferidos para outras empresas do grupo <strong>AstraZeneca </strong> , no Brasil e no exterior, e para
+            <strong> AstraZeneca </strong> poderão ser transferidos para outras empresas do grupo <strong>AstraZeneca </strong> , no Brasil e no exterior, e para
             determinados terceiros que auxiliam a <strong>AstraZeneca </strong>  a implementar, desempenhar, operacionalizar, fornecer e a
             aprimorar o Programa, tais como: administradores da plataforma do Programa, empresa de cloud-computing,
             prestadores de serviços de TI e demais fornecedores e prestadores de serviço da <strong>AstraZeneca </strong> . A <strong>AstraZeneca </strong> 
