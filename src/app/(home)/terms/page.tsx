@@ -259,7 +259,7 @@ useEffect(() => {
                 maskPlaceholder={null}
               >
                 <Input
-                  label="CPF do paciente"
+                  label="CPF"
                   placeholder="999.999.999-99"
                 />
               </ReactInputMask>
