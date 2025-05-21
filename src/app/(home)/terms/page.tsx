@@ -7,6 +7,8 @@ import Input from '@/components/input/Input';
 import Loading from '@/components/loading/Loading';
 import { toast } from 'react-toastify';
 import { getConsentTerms, getDoctorByProgram, termDoctor } from '@/services/doctor';
+import ReactInputMask from 'react-input-mask';
+import { useCpfValidation } from '@/hooks/use-serpro-cpf-validation';
 
 const TermsContent = () => {
   const searchParams = useSearchParams();
@@ -15,17 +17,26 @@ const TermsContent = () => {
   const [id, setId] = useState('');
   const [doctorData, setDoctorData] = useState<any>({});
   const [dataDoctor, setDataDoctor] = useState<any>(null);
-
+  const [cpf, setCpf] = useState(doctorData.cpf || '')
+  const [telephoneNumber, setTelephoneNumber] = useState(doctorData.telephoneNumber || '')
+  const [isEmailValid, setIsEmailValid] = useState(false)
+  const [emailAddress, setEmailAddress] = useState(doctorData.emailAddress || '')
   const [consentToReceivePhonecalls, setConsentToReceivePhonecalls] = useState(false);
   const [consentProgramParticipation, setConsentProgramParticipation] =
     useState(false);
   const [consentToReceiveSms, setConsentToReceiveSms] = useState(false);
   const [confirmPersonalInformation, setConfirmPersonalInformation] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState(false);
+  const missingInfo =
+    !doctorData.cpf ||
+    !doctorData.emailAddress ||
+    !isEmailValid ||
+    !doctorData.telephoneNumber;
   const [consentLgpd, setConsentLgpd] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { isLoadingCpf, isCpfValid } = useCpfValidation()
   const [isScrolled, setIsScrolled] = useState(false);
 
   const termRef = useRef<HTMLDivElement>(null);
@@ -33,6 +44,10 @@ const TermsContent = () => {
   useEffect(() => {
     if (UrlRouter) setId(UrlRouter);
   }, [UrlRouter]);
+
+  function validateEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
 
   useEffect(() => {
     if (!id) return;
@@ -95,6 +110,8 @@ const TermsContent = () => {
     }
   };
 
+
+
   const fetchConsentTerms = async () => {
     const response = await getConsentTerms({ doctorId: id, programcode: '1100' });
     setConsentToReceivePhonecalls(response.consentToReceivePhonecalls || false);
@@ -119,6 +136,15 @@ const TermsContent = () => {
       setIsSubmitted(true);
     }
   };
+
+useEffect(() => {
+  if (doctorData && Object.keys(doctorData).length) {
+    setCpf(doctorData.cpf || '')
+    setTelephoneNumber(doctorData.telephoneNumber || '')
+    setEmailAddress(doctorData.emailAddress || '')
+  }
+}, [doctorData])
+
 
   const handleAccept = async () => {
     setIsLoading(true);
@@ -161,6 +187,7 @@ const TermsContent = () => {
     }
   };
 
+
   useEffect(() => {
     if (!termRef.current) return;
     const { scrollHeight, clientHeight } = termRef.current;
@@ -183,24 +210,7 @@ const TermsContent = () => {
                 label="Médico"
                 value={doctorData.name || ''}
               />
-              <Input
-                name="telephoneNumber"
-                type="text"
-                disabled
-                placeholder="Celular"
-                label="Celular"
-                value={doctorData.telephoneNumber || ''}
-              />
-              <Input
-                name="emailAddress"
-                type="text"
-                disabled
-                placeholder="E-mail"
-                label="E-mail"
-                value={doctorData.emailAddress || ''}
-              />
-            </div>
-            <div className="flex flex-col md:flex-row gap-3">
+
               <Input
                 name="licenseNumber"
                 type="text"
@@ -217,18 +227,53 @@ const TermsContent = () => {
                 label="UF"
                 value={doctorData.licenseState || ''}
               />
+
+            </div>
+            <div className="flex flex-col md:flex-row gap-3">
+
+              <ReactInputMask
+                mask="999.999.999-99"
+                alwaysShowMask={false}
+                onChange={e => setCpf(e.target.value)}
+                name="patientCpf"
+                value={cpf}
+                maskPlaceholder={null}
+                onBlur={() => setIsEmailValid(validateEmail(emailAddress))}
+              >
+                <Input
+                  label="CPF do paciente"
+                  placeholder="999.999.999-99"
+                />
+              </ReactInputMask>
+
+              <ReactInputMask
+                mask="(99) 99999-9999"
+                value={telephoneNumber}
+                onChange={e => setTelephoneNumber(e.target.value)}
+                maskPlaceholder={null}
+              >
+                <Input
+                  label="Celular"
+                  placeholder="(99) 99999-9999"
+                />
+              </ReactInputMask>
+
               <Input
-                name="cpf"
+                name="emailAddress"
                 type="text"
-                disabled
-                placeholder="CPF"
-                label="CPF"
-                value={doctorData.cpf || ''}
+                placeholder="E-mail"
+                label="E-mail"
+                value={emailAddress}
+                onChange={e => setEmailAddress(e.target.value)}
+
               />
             </div>
           </>
         )}
       </div>
+      <p className="text-red-500 text-md mt-4">
+        É necessário confirmar os dados de celular, e-mail e CPF para continuar.
+      </p>
       <div className="mt-5 bg-gray-50 border border-gray-200 rounded-lg p-5">
         <h2 className="text-lg font-bold mb-4">Consentimentos</h2>
         <div className="flex items-center gap-2 mb-4">
@@ -289,8 +334,8 @@ const TermsContent = () => {
             pelos médicos participantes, inclusive no que se refere ao tratamento de dados pessoais, conforme estabelecido
             na Política de Privacidade da <strong>AstraZeneca</strong>. Portanto, antes de se cadastrar no Programa, os participantes devem
             ler com atenção este Regulamento e a Política de Privacidade da <strong>AstraZeneca</strong>, disponível no link:
-             <a href="https://www.azprivacy.astrazeneca.com/americas/brazil/br/privacy-notices.html" target="_blank" rel="noopener noreferrer"  className="underline">
-            https://www.azprivacy.astrazeneca.com/americas/brazil/br/privacy-notices.html
+            <a href="https://www.azprivacy.astrazeneca.com/americas/brazil/br/privacy-notices.html" target="_blank" rel="noopener noreferrer" className="underline">
+              https://www.azprivacy.astrazeneca.com/americas/brazil/br/privacy-notices.html
             </a>
           </p>
           <p>• O Programa é realizado por prazo indeterminado, podendo ser alterado, suspenso ou encerrado a qualquer
@@ -407,9 +452,9 @@ const TermsContent = () => {
           comunicação ou difusão e exigirá que seus parceiros, fornecedores e prestadores de serviço também o façam.
           Maiores informações sobre tratamento de dados pessoais pela <strong>AstraZeneca </strong> e medidas de segurança que serão
           conferidas aos dados pessoais dos pacientes estão disponíveis em nosso Aviso de Privacidade em
-          <a href="https://www.azprivacy.astrazeneca.com/americas/brazil/br/privacy-notices.html" target="_blank" rel="noopener noreferrer"  className="underline">
+          <a href="https://www.azprivacy.astrazeneca.com/americas/brazil/br/privacy-notices.html" target="_blank" rel="noopener noreferrer" className="underline">
             https://www.azprivacy.astrazeneca.com/americas/brazil/br/privacy-notices.html
-            </a>
+          </a>
         </p>
         <p>• A <strong>AstraZeneca </strong> armazenará os dados pessoais dos participantes até que eles não sejam mais necessários
           no âmbito do Programa, salvo se a <strong>AstraZeneca </strong> precisar mantê-los para alguma outra finalidade, como o cumprimento de obrigação legal ou para a proteção dos direitos da AstraZeneca e de terceiros, nos termos da
@@ -434,11 +479,11 @@ const TermsContent = () => {
           a atualização/alteração de seus dados cadastrais e/ou a exclusão/cancelamento de seu cadastro, a qualquer tempo
           e sem necessidade de apresentar qualquer justificativa para tal, por meio do e-mail:
           <a
-              href="mailto:complementare@programacomplementare.com.br"
-              className="underline"
-            >
-              complementare@programacomplementare.com.br
-            </a>. No entanto, no caso de ser solicitada a exclusão de
+            href="mailto:complementare@programacomplementare.com.br"
+            className="underline"
+          >
+            complementare@programacomplementare.com.br
+          </a>. No entanto, no caso de ser solicitada a exclusão de
           informações do cadastro, os participantes estão cientes que poderão não mais estar aptos a participar do Programa
           e serão excluídos dos serviços do Programa. Para maiores detalhes dos direitos dos participantes, acesse o Aviso
           de Privacidade da <strong>AstraZeneca</strong>, informado no item 7.4.
@@ -479,9 +524,21 @@ const TermsContent = () => {
           onClick={handleAccept}
           label="ACEITAR"
           isLoading={isLoading}
-          disabled={!isScrolled || isSubmitted || !consentLgpd || !confirmPersonalInformation || !consentProgramParticipation || !consentToReceivePhonecalls || !consentToReceiveSms || !confirmEmail}
+          disabled={
+            !isScrolled ||
+            isSubmitted ||
+            missingInfo ||
+            !consentLgpd ||
+            !confirmPersonalInformation ||
+            !consentProgramParticipation ||
+            !consentToReceivePhonecalls ||
+            !consentToReceiveSms ||
+            !confirmEmail
+          }
           customClass="w-full bg-[#004aad] text-white"
         />
+
+
         <Button
           onClick={handleRefuse}
           label="RECUSAR"
