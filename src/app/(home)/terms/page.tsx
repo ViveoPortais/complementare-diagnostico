@@ -33,6 +33,21 @@ const TermsContent = () => {
     !doctorData.telephoneNumber;
   const [consentLgpd, setConsentLgpd] = useState(false);
 
+  const validateCPF = (raw: string) => {
+    const d = raw.replace(/\D/g, '');
+    if (d.length !== 11) return false;
+    if (/^(\d)\1{10}$/.test(d)) return false;
+    if ('01234567890'.includes(d) || '98765432100'.includes(d)) return false;
+    return true;
+  };
+
+  const validatePhone = (raw: string) => {
+    const d = raw.replace(/\D/g, '');
+    return /^\d{10,11}$/.test(d);
+  };
+
+
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -44,8 +59,8 @@ const TermsContent = () => {
   }, [UrlRouter]);
 
   function validateEmail(email: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-}
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
 
   useEffect(() => {
     if (!id) return;
@@ -135,36 +150,36 @@ const TermsContent = () => {
     }
   };
 
-useEffect(() => {
-  if (doctorData && Object.keys(doctorData).length) {
-    setCpf(doctorData.cpf || '')
-    setTelephoneNumber(doctorData.telephoneNumber || '')
-    setEmailAddress(doctorData.emailAddress || '')
-  }
-}, [doctorData])
+  useEffect(() => {
+    if (doctorData && Object.keys(doctorData).length) {
+      setCpf(doctorData.cpf || '')
+      setTelephoneNumber(doctorData.telephoneNumber || '')
+      setEmailAddress(doctorData.emailAddress || '')
+    }
+  }, [doctorData])
 
 
   const handleAccept = async () => {
     setIsLoading(true);
-  const payload = {
-    doctorId: id,
-    doctorName: doctorData.name,
-    licenseNumber: doctorData.licenseNumber,
-    licenseState: doctorData.licenseState,
-    doctorCPF: cpf,
-    doctorEmail: emailAddress,
-    mobilePhone: telephoneNumber,
-    consentProgramParticipation,
-    consentToReceivePhonecalls,
-    consentToReceiveSms,
-    confirmPersonalInformation,
-    consentLgpd,
-    consentToReceiveEmail: confirmEmail,
-    programCode: '1100',
-    consentTerms: true,
-  };
+    const payload = {
+      doctorId: id,
+      doctorName: doctorData.name,
+      licenseNumber: doctorData.licenseNumber,
+      licenseState: doctorData.licenseState,
+      doctorCPF: cpf,
+      doctorEmail: emailAddress,
+      mobilePhone: telephoneNumber,
+      consentProgramParticipation,
+      consentToReceivePhonecalls,
+      consentToReceiveSms,
+      confirmPersonalInformation,
+      consentLgpd,
+      consentToReceiveEmail: confirmEmail,
+      programCode: '1100',
+      consentTerms: true,
+    };
 
-  const response = await termDoctor(payload);
+    const response = await termDoctor(payload);
     response.isValidData
       ? toast.success('Termo aceito com sucesso.')
       : toast.error(response.value);
@@ -208,25 +223,38 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-  if (doctorData && Object.keys(doctorData).length) {
-    const rawCpf = doctorData.cpf || ''
-    const rawEmail = doctorData.emailAddress || ''
-    const rawPhone = doctorData.telephoneNumber || ''
+    if (doctorData && Object.keys(doctorData).length) {
+      const rawCpf = doctorData.cpf || ''
+      const rawEmail = doctorData.emailAddress || ''
+      const rawPhone = doctorData.telephoneNumber || ''
 
-    setCpf(rawCpf)
-    setEmailAddress(rawEmail)
-    setTelephoneNumber(rawPhone)
+      setCpf(rawCpf)
+      setEmailAddress(rawEmail)
+      setTelephoneNumber(rawPhone)
 
-    
-    setIsEmailValid(validateEmail(rawEmail))
 
-    if (termRef.current) {
-      const { scrollHeight, clientHeight } = termRef.current
-      setIsScrolled(scrollHeight <= clientHeight)
+      setIsEmailValid(validateEmail(rawEmail))
+
+      if (termRef.current) {
+        const { scrollHeight, clientHeight } = termRef.current
+        setIsScrolled(scrollHeight <= clientHeight)
+      }
     }
-  }
-}, [doctorData])
+  }, [doctorData])
 
+  const disableAccept = (() => {
+    if (!isScrolled || isSubmitted) return true;
+    if (!consentLgpd ||
+      !confirmPersonalInformation ||
+      !consentProgramParticipation ||
+      !consentToReceivePhonecalls ||
+      !consentToReceiveSms ||
+      !confirmEmail) return true;
+    if (!validateCPF(cpf)) return true;
+    if (!validatePhone(telephoneNumber)) return true;
+    if (!validateEmail(emailAddress)) return true;
+    return false;
+  })();
 
   return (
     <div className="px-5 py-3 md:px-12 md:py-5">
@@ -272,6 +300,12 @@ useEffect(() => {
                 name="patientCpf"
                 value={cpf}
                 maskPlaceholder={null}
+                onBlur={() => {
+                  const clean = cpf.replace(/\D/g, '')
+                  if (!validateCPF(clean)) {
+                    toast.error('CPF inválido.')
+                  }
+                }}
               >
                 <Input
                   label="CPF"
@@ -284,6 +318,18 @@ useEffect(() => {
                 value={telephoneNumber}
                 onChange={e => setTelephoneNumber(e.target.value)}
                 maskPlaceholder={null}
+                onBlur={() => {
+                  const d = telephoneNumber.replace(/\D/g, '')
+                  if (
+                    d.length !== 11 ||
+                    d[2] !== '9' ||
+                    /^(\d)\1{10}$/.test(d) ||
+                    '01234567890'.includes(d) ||
+                    '98765432100'.includes(d)
+                  ) {
+                    toast.error('Celular inválido.')
+                  }
+                }}
               >
                 <Input
                   label="Celular"
@@ -557,17 +603,7 @@ useEffect(() => {
           onClick={handleAccept}
           label="ACEITAR"
           isLoading={isLoading}
-          disabled={
-            !isScrolled ||
-            isSubmitted ||
-            missingInfo ||
-            !consentLgpd ||
-            !confirmPersonalInformation ||
-            !consentProgramParticipation ||
-            !consentToReceivePhonecalls ||
-            !consentToReceiveSms ||
-            !confirmEmail
-          }
+          disabled={disableAccept}
           customClass="w-full bg-[#004aad] text-white"
         />
 
