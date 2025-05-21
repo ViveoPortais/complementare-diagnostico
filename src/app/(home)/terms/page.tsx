@@ -344,7 +344,11 @@ const TermsContent = () => {
                 label="E-mail"
                 value={emailAddress}
                 onChange={e => setEmailAddress(e.target.value)}
-
+                onBlur={() => {
+                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress)) {
+                    toast.error('E-mail inválido.')
+                  }
+                }}
               />
             </div>
           </>
