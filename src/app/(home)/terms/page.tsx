@@ -146,10 +146,25 @@ useEffect(() => {
 
   const handleAccept = async () => {
     setIsLoading(true);
-    const response = await termDoctor({
-      ...dataDoctor,
-      consentTerms: true,
-    });
+  const payload = {
+    doctorId: id,
+    doctorName: doctorData.name,
+    licenseNumber: doctorData.licenseNumber,
+    licenseState: doctorData.licenseState,
+    doctorCPF: cpf,
+    doctorEmail: emailAddress,
+    mobilePhone: telephoneNumber,
+    consentProgramParticipation,
+    consentToReceivePhonecalls,
+    consentToReceiveSms,
+    confirmPersonalInformation,
+    consentLgpd,
+    consentToReceiveEmail: confirmEmail,
+    programCode: '1100',
+    consentTerms: true,
+  };
+
+  const response = await termDoctor(payload);
     response.isValidData
       ? toast.success('Termo aceito com sucesso.')
       : toast.error(response.value);
