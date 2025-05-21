@@ -8,7 +8,6 @@ import Loading from '@/components/loading/Loading';
 import { toast } from 'react-toastify';
 import { getConsentTerms, getDoctorByProgram, termDoctor } from '@/services/doctor';
 import ReactInputMask from 'react-input-mask';
-import { useCpfValidation } from '@/hooks/use-serpro-cpf-validation';
 
 const TermsContent = () => {
   const searchParams = useSearchParams();
@@ -36,7 +35,6 @@ const TermsContent = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { isLoadingCpf, isCpfValid } = useCpfValidation()
   const [isScrolled, setIsScrolled] = useState(false);
 
   const termRef = useRef<HTMLDivElement>(null);
@@ -194,6 +192,27 @@ useEffect(() => {
     if (scrollHeight <= clientHeight) setIsScrolled(true);
   }, []);
 
+  useEffect(() => {
+  if (doctorData && Object.keys(doctorData).length) {
+    const rawCpf = doctorData.cpf || ''
+    const rawEmail = doctorData.emailAddress || ''
+    const rawPhone = doctorData.telephoneNumber || ''
+
+    setCpf(rawCpf)
+    setEmailAddress(rawEmail)
+    setTelephoneNumber(rawPhone)
+
+    
+    setIsEmailValid(validateEmail(rawEmail))
+
+    if (termRef.current) {
+      const { scrollHeight, clientHeight } = termRef.current
+      setIsScrolled(scrollHeight <= clientHeight)
+    }
+  }
+}, [doctorData])
+
+
   return (
     <div className="px-5 py-3 md:px-12 md:py-5">
       <div className="flex flex-col gap-3 border border-gray-200 p-5 rounded-lg">
@@ -238,7 +257,6 @@ useEffect(() => {
                 name="patientCpf"
                 value={cpf}
                 maskPlaceholder={null}
-                onBlur={() => setIsEmailValid(validateEmail(emailAddress))}
               >
                 <Input
                   label="CPF do paciente"
